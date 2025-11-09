@@ -1,0 +1,167 @@
+﻿<Window x:Class="restaurant_billing_app.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Restaurant Billing App"
+        Height="600" Width="850"
+        Background="#FAFAFA"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="10 0 0 0"/>
+            <Setter Property="Padding" Value="10 5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+
+        <StatusBar DockPanel.Dock="Bottom" Background="#EEE" Padding="5">
+            <StatusBarItem Content="Subtotal:"/>
+            <StatusBarItem>
+                <!-- Subtotal binding -->
+                <TextBlock Text="{Binding Subtotal, StringFormat=C}" Width="80"/>
+            </StatusBarItem>
+
+            <Separator/>
+
+            <StatusBarItem Content="Tax:"/>
+            <StatusBarItem>
+                <!-- Tax binding -->
+                <TextBlock Text="{Binding Tax, StringFormat=C}" Width="80"/>
+            </StatusBarItem>
+
+            <Separator/>
+
+            <StatusBarItem Content="Total:"/>
+            <StatusBarItem>
+                <!-- Total binding, highlighted -->
+                <TextBlock Text="{Binding Total, StringFormat=C}"
+                           Width="80" FontWeight="Bold" Foreground="#1B5E20"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- MAIN CONTENT -->
+        <Grid Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Menu Selection Area -->
+                <RowDefinition Height="*"/>
+                <!-- DataGrid (Orders) -->
+                <RowDefinition Height="Auto"/>
+                <!-- Action Buttons -->
+            </Grid.RowDefinitions>
+
+            <!--  MENU SELECTION  -->
+            <GroupBox Header="Select Menu Items"
+                      FontWeight="Bold"
+                      Margin="0 0 0 10"
+                      Padding="10"
+                      BorderBrush="#D5D5D5"
+                      Background="White">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <!-- Spacer -->
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Beverage ComboBox -->
+                    <StackPanel Grid.Column="0" Margin="5">
+                        <Label Content="Beverage:" FontWeight="Normal"/>
+                        <ComboBox x:Name="cmbBeverage"
+                                  DisplayMemberPath="Name"
+                                  SelectionChanged="OnMenuItemSelected"/>
+                    </StackPanel>
+
+                    <!-- Appetizer ComboBox -->
+                    <StackPanel Grid.Column="1" Margin="5">
+                        <Label Content="Appetizer:" FontWeight="Normal"/>
+                        <ComboBox x:Name="cmbAppetizer"
+                                  DisplayMemberPath="Name"
+                                  SelectionChanged="OnMenuItemSelected"/>
+                    </StackPanel>
+
+                    <!-- Main Course ComboBox -->
+                    <StackPanel Grid.Column="2" Margin="5">
+                        <Label Content="Main Course:" FontWeight="Normal"/>
+                        <ComboBox x:Name="cmbMainCourse"
+                                  DisplayMemberPath="Name"
+                                  SelectionChanged="OnMenuItemSelected"/>
+                    </StackPanel>
+
+                    <!-- Dessert ComboBox -->
+                    <StackPanel Grid.Column="3" Margin="5">
+                        <Label Content="Dessert:" FontWeight="Normal"/>
+                        <ComboBox x:Name="cmbDessert"
+                                  DisplayMemberPath="Name"
+                                  SelectionChanged="OnMenuItemSelected"/>
+                    </StackPanel>
+
+                </Grid>
+            </GroupBox>
+
+            <!-- DATA GRID  -->
+            <DataGrid Grid.Row="1"
+                      x:Name="dgOrder"
+                      ItemsSource="{Binding Orders}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      IsReadOnly="False"
+                      SelectionMode="Single"
+                      Margin="0 0 0 10"
+                      HeadersVisibility="Column"
+                      RowHeaderWidth="0"
+                      AlternatingRowBackground="#F7F7F7"
+                      BorderBrush="#DDD">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Item Name"
+                                        Binding="{Binding Name}"
+                                        Width="*"
+                                        IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Price"
+                                        Binding="{Binding Price, StringFormat=C}"
+                                        Width="100"
+                                        IsReadOnly="True"/>
+
+                    <DataGridTextColumn Header="Quantity"
+                                        Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Width="100"/>
+
+                    <DataGridTextColumn Header="Total"
+                                        Binding="{Binding Total, StringFormat=C}"
+                                        Width="120"
+                                        IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- ACTION BUTTONS  -->
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+
+                <Button Content="Remove Selected Item"
+                        Width="160"
+                        Background="White"
+                        Foreground="Black"
+                        FontWeight="Bold"
+                        Click="OnRemoveItemClick"/>
+
+                <Button Content="Clear Bill"
+                        Width="100"
+                        Background="White"
+                        Foreground="Black"
+                        FontWeight="Bold"
+                        Click="OnClearBillClick"/>
+            </StackPanel>
+
+        </Grid>
+    </DockPanel>
+</Window>
